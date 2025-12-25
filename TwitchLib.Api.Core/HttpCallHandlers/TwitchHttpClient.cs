@@ -28,10 +28,10 @@ public class TwitchHttpClient : IHttpCallHandler
     /// Creates an Instance of the TwitchHttpClient Class.
     /// </summary>
     /// <param name="logger">Instance Of Logger, otherwise no logging is used,  </param>
-    public TwitchHttpClient(ILogger<TwitchHttpClient> logger = null)
+    public TwitchHttpClient(ILogger<TwitchHttpClient> logger = null, IWebProxy proxy = null)
     {
         _logger = logger;
-        _http = new HttpClient(new TwitchHttpClientHandler(_logger));
+        _http = new HttpClient(new TwitchHttpClientHandler(_logger, proxy));
     }
 
     /// <summary>

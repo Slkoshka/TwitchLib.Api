@@ -21,7 +21,8 @@ public class TwitchHttpClientHandler : DelegatingHandler
     /// Creates a new TwitchHttpClientHandler
     /// </summary>
     /// <param name="logger">Logger to use for logging</param>
-    public TwitchHttpClientHandler(ILogger<IHttpCallHandler> logger) : base(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate })
+    public TwitchHttpClientHandler(ILogger<IHttpCallHandler> logger, IWebProxy proxy)
+        : base(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate, UseProxy = proxy != null, Proxy = proxy })
     {
         _logger = logger;
     }
