@@ -22,15 +22,12 @@ public class Auth : ApiBase
     ///     <para>Throws a BadRequest Exception if the request fails due to a bad refresh token</para>
     /// </summary>
     /// <returns>A RefreshResponse object that holds your new auth and refresh token and the list of scopes for that token</returns>
-    public Task<RefreshResponse> RefreshAuthTokenAsync(string refreshToken, string clientSecret, string clientId = null)
+    public Task<RefreshResponse> RefreshAuthTokenAsync(string refreshToken, string clientSecret = null, string clientId = null)
     {
         var internalClientId = clientId ?? Settings.ClientId;
 
         if (string.IsNullOrWhiteSpace(refreshToken))
             throw new BadParameterException("The refresh token is not valid. It is not allowed to be null, empty or filled with whitespaces.");
-
-        if (string.IsNullOrWhiteSpace(clientSecret))
-            throw new BadParameterException("The client secret is not valid. It is not allowed to be null, empty or filled with whitespaces.");
 
         if (string.IsNullOrWhiteSpace(internalClientId))
             throw new BadParameterException("The clientId is not valid. It is not allowed to be null, empty or filled with whitespaces.");
@@ -40,8 +37,12 @@ public class Auth : ApiBase
             new("grant_type", "refresh_token"),
             new("refresh_token", refreshToken),
             new("client_id", internalClientId),
-            new("client_secret", clientSecret)
         };
+
+        if (clientSecret != null)
+        {
+            getParams.Add(new("client_secret", clientSecret));
+        }
 
         return TwitchPostGenericAsync<RefreshResponse>("/token", ApiVersion.Auth, null, getParams, null, internalClientId);
     }
